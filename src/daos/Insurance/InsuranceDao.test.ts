@@ -70,6 +70,8 @@ describe("Insurance Data-Access-Object test", () => {
         }
       ]);
     });
+  });
+  describe("Check rules of an insurance item and apply effect", () => {
     it("Should return a true from the test of rule", () => {
       const effect = new Effect({
         field: "price",
@@ -138,6 +140,131 @@ describe("Insurance Data-Access-Object test", () => {
         }
       }
       expect(insurance.price).toBe(99);
+    });
+  });
+  describe("Simulate the effects of rules by two days", () => {
+    it("Should return a list of the insurance and the changes by days", () => {
+      const insuranceDao = new InsuranceDao();
+      insuranceDao.add(
+        new Insurance({
+          name: "test",
+          price: 100,
+          sellIn: 10,
+          rule: [
+            {
+              field: "sellIn",
+              operation: "daily",
+              target: 10,
+              effect: { field: "price", operation: "-", operator: 1 }
+            }
+          ]
+        })
+      );
+      insuranceDao.add(
+        new Insurance({
+          name: "Seguro 2",
+          price: 10,
+          sellIn: 10,
+          rule: [
+            {
+              field: "sellIn",
+              operation: "daily",
+              target: 10,
+              effect: { field: "price", operation: "-", operator: 1 }
+            }
+          ]
+        })
+      );
+      const result = insuranceDao.simulate(2);
+      expect(result.length).toEqual(2);
+      expect(result).toEqual([
+        [
+          [
+            {
+              name: "test",
+              price: 100,
+              sellIn: 10,
+              rule: [
+                {
+                  field: "sellIn",
+                  operation: "daily",
+                  target: 10,
+                  effect: { field: "price", operation: "-", operator: 1 }
+                }
+              ]
+            },
+            {
+              name: "Seguro 2",
+              price: 10,
+              sellIn: 10,
+              rule: [
+                {
+                  field: "sellIn",
+                  operation: "daily",
+                  target: 10,
+                  effect: { field: "price", operation: "-", operator: 1 }
+                }
+              ]
+            }
+          ],
+          [
+            {
+              name: "test",
+              price: 99,
+              sellIn: 10,
+              rule: [
+                {
+                  field: "sellIn",
+                  operation: "daily",
+                  target: 10,
+                  effect: { field: "price", operation: "-", operator: 1 }
+                }
+              ]
+            },
+            {
+              name: "Seguro 2",
+              price: 9,
+              sellIn: 10,
+              rule: [
+                {
+                  field: "sellIn",
+                  operation: "daily",
+                  target: 10,
+                  effect: { field: "price", operation: "-", operator: 1 }
+                }
+              ]
+            }
+          ],
+          [
+            {
+              name: "test",
+              price: 98,
+              sellIn: 10,
+              rule: [
+                {
+                  field: "sellIn",
+                  operation: "daily",
+                  target: 10,
+                  effect: { field: "price", operation: "-", operator: 1 }
+                }
+              ]
+            },
+            {
+              name: "Seguro 2",
+              price: 8,
+              sellIn: 10,
+              rule: [
+                {
+                  field: "sellIn",
+                  operation: "daily",
+                  target: 10,
+                  effect: { field: "price", operation: "-", operator: 1 }
+                }
+              ]
+            }
+          ]
+        ]
+      ]);
     });
   });
 });
