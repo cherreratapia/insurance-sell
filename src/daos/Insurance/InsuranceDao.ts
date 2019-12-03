@@ -1,5 +1,4 @@
-import { Insurance, Fields } from "../../entities";
-import { Rule } from "@entities";
+import { Insurance, Rule, Fields } from "../../entities";
 import { operations, COMPARATORS } from "../../entities/Operation";
 
 export interface IInsuranceDao {
