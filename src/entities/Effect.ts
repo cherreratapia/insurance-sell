@@ -1,11 +1,13 @@
+import { Fields } from "./Field";
+
 export interface IEffect {
-  field: string;
+  field: Fields;
   operation: string;
   operator: number;
 }
 
 export class Effect implements IEffect {
-  field: string;
+  field: Fields;
   operation: string;
   operator: number;
 

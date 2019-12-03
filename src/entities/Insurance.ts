@@ -1,18 +1,15 @@
-import { v4 as uuid } from "uuid";
 import { Rule } from "./Rule";
-import { Effect } from "./Effect";
-
 interface StringMap {
   [key: string]: any;
 }
-export interface IInsurance {
+export interface IInsurance extends StringMap {
   name: string;
   sellIn: number;
   price: number;
   rule?: Rule[];
 }
 
-export class Insurance implements IInsurance, StringMap {
+export class Insurance implements IInsurance {
   name: string;
   sellIn: number;
   price: number;

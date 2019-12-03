@@ -1,14 +1,15 @@
 import { Effect } from "./Effect";
+import { Fields } from "./Field";
 
 export interface IRule {
-  field: string;
+  field: Fields;
   operation: string;
   target: number;
   effect: Effect;
 }
 
 export class Rule implements IRule {
-  field: string;
+  field: Fields;
   operation: string;
   target: number;
   effect: Effect;

@@ -1,4 +1,4 @@
-import { Insurance } from "../../entities";
+import { Insurance, Fields } from "../../entities";
 import { Rule } from "@entities";
 import { operations, COMPARATORS } from "../../entities/Operation";
 
@@ -31,38 +31,55 @@ export class InsuranceDao implements IInsuranceDao {
       copyInsurance.map((insurance: Insurance) => {
         if (insurance.rule) {
           insurance.rule.forEach((rule: Rule) => {
-            const newPrice = COMPARATORS[rule.operation](
-              insurance.sellIn,
-              rule.target
-            )
-              ? operations[rule.effect.operation](
-                  insurance.price,
-                  rule.effect.operator
-                )
-              : insurance.price;
-            insurance = Object.assign(
-              {},
-              {
-                ...insurance,
-                price: newPrice
-              }
+            let newPrice = insurance.price;
+            let newSellIn = insurance.sellIn;
+            if (rule.effect.field === Fields.PRICE) {
+              newPrice = COMPARATORS[rule.operation](
+                insurance[rule.field],
+                rule.target
+              )
+                ? operations[rule.effect.operation](
+                    insurance[rule.effect.field],
+                    rule.effect.operator
+                  )
+                : insurance.price;
+            }
+            if (rule.effect.field === Fields.SELLIN) {
+              newSellIn = COMPARATORS[rule.operation](
+                insurance[rule.field],
+                rule.target
+              )
+                ? operations[rule.effect.operation](
+                    insurance[rule.effect.field],
+                    rule.effect.operator
+                  )
+                : insurance.sellIn;
+            }
+            insurance = new Insurance(
+              Object.assign(
+                {},
+                {
+                  ...insurance,
+                  price: newPrice,
+                  sellIn: newSellIn
+                }
+              )
             );
-            if (!result.length) {
+          });
+
+          if (!result.length) {
+            result.push([{ ...insurance }]);
+          } else {
+            if (!result[i]) {
               result.push([{ ...insurance }]);
             } else {
-              if (!result[i]) {
-                result.push([{ ...insurance }]);
-              } else {
-                result[i].push({ ...insurance });
-              }
+              result[i].push({ ...insurance });
             }
-          });
+          }
         }
       });
       if (result[i]) {
         copyInsurance = [...result[i]];
-      } else {
-        result.push([...copyInsurance]);
       }
     }
     return result;
