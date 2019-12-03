@@ -305,3 +305,7 @@ const executeRule = (rule: Rule, origin: number, target: number) =>
   }
 ];
 ```
+
+# Documentación de la API
+
+[Postman](https://documenter.getpostman.com/view/4048913/SWE28zmr?version=latest)
