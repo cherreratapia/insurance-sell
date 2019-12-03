@@ -1,5 +1,6 @@
-import { Insurance, Rule, Effect } from "../../entities";
+import { Insurance, Rule, Effect, IInsurance } from "../../entities";
 import { InsuranceDao } from "./InsuranceDao";
+import { executeRule, operations } from "../../entities/Operation";
 
 describe("Insurance Data-Access-Object test", () => {
   describe("Get all insurance items", () => {
@@ -68,6 +69,75 @@ describe("Insurance Data-Access-Object test", () => {
           ]
         }
       ]);
+    });
+    it("Should return a true from the test of rule", () => {
+      const effect = new Effect({
+        field: "price",
+        operation: "-",
+        operator: 1
+      });
+      const rule = new Rule({
+        field: "sellIn",
+        operation: "daily",
+        target: 10,
+        effect
+      });
+      const newInsurance = {
+        name: "test",
+        price: 100,
+        sellIn: 10,
+        rule: [rule]
+      };
+      const insurance: Insurance = new Insurance(newInsurance);
+      let resultExecute: boolean = false;
+      if (insurance.rule) {
+        resultExecute = executeRule(
+          insurance.rule[0],
+          insurance.sellIn,
+          insurance.rule[0].target
+        );
+      }
+      expect(resultExecute).toBe(true);
+    });
+    it("Should execute the operation after the test of rule", () => {
+      const effect = new Effect({
+        field: "price",
+        operation: "-",
+        operator: 1
+      });
+      const rule = new Rule({
+        field: "sellIn",
+        operation: "daily",
+        target: 10,
+        effect
+      });
+      const newInsurance = {
+        name: "test",
+        price: 100,
+        sellIn: 10,
+        rule: [rule]
+      };
+      let insurance: Insurance = new Insurance(newInsurance);
+      let resultExecute: boolean = false;
+      if (insurance.rule) {
+        resultExecute = executeRule(
+          insurance.rule[0],
+          insurance.sellIn,
+          insurance.rule[0].target
+        );
+      }
+      expect(resultExecute).toBe(true);
+      if (resultExecute) {
+        if (insurance.rule) {
+          let insuranceCopy: IInsurance = { ...insurance };
+          insuranceCopy.price = operations[insurance.rule[0].effect.operation](
+            insuranceCopy.price,
+            insurance.rule[0].effect.operator
+          );
+          insurance = new Insurance(insuranceCopy);
+        }
+      }
+      expect(insurance.price).toBe(99);
     });
   });
 });

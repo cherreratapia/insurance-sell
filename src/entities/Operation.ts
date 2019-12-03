@@ -1,18 +1,19 @@
 import { Rule } from "./Rule";
-import { Insurance } from "./Insurance";
 
-type comparatorOptions = {
+type stringAsKeyOptions = {
   [key: string]: any;
 };
 
-export const COMPARATORS: comparatorOptions = {
+export const operations: stringAsKeyOptions = {
+  "+": (origin: number, target: number) => origin + target,
+  "-": (origin: number, target: number) => origin - target,
+  "*": (origin: number, target: number) => origin * target,
+  "/": (origin: number, target: number) => origin / target
+};
+
+export const COMPARATORS: stringAsKeyOptions = {
   daily: (origin: number, target: number) => true
 };
 
-export const executeRule = (insurance: Insurance) => {
-  if (insurance.rule) {
-    insurance.rule.map((item: Rule) => {
-      return COMPARATORS[item.operation](insurance.sellIn, item.target);
-    });
-  }
-};
+export const executeRule = (rule: Rule, origin: number, target: number) =>
+  COMPARATORS[rule.operation](origin, target);

@@ -1,6 +1,10 @@
 import { v4 as uuid } from "uuid";
 import { Rule } from "./Rule";
 import { Effect } from "./Effect";
+
+interface StringMap {
+  [key: string]: any;
+}
 export interface IInsurance {
   name: string;
   sellIn: number;
@@ -8,7 +12,7 @@ export interface IInsurance {
   rule?: Rule[];
 }
 
-export class Insurance implements IInsurance {
+export class Insurance implements IInsurance, StringMap {
   name: string;
   sellIn: number;
   price: number;
