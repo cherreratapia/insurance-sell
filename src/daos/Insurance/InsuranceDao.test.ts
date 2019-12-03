@@ -101,7 +101,47 @@ describe("Insurance Data-Access-Object test", () => {
       }
       expect(resultExecute).toBe(true);
     });
-    it("Should execute the operation after the test of rule", () => {
+    it("Should execute the operation after the test of rule (increment operator)", () => {
+      const effect = new Effect({
+        field: "price",
+        operation: "+",
+        operator: 1
+      });
+      const rule = new Rule({
+        field: "sellIn",
+        operation: "daily",
+        target: 10,
+        effect
+      });
+      const newInsurance = {
+        name: "test",
+        price: 100,
+        sellIn: 10,
+        rule: [rule]
+      };
+      let insurance: Insurance = new Insurance(newInsurance);
+      let resultExecute: boolean = false;
+      if (insurance.rule) {
+        resultExecute = executeRule(
+          insurance.rule[0],
+          insurance.sellIn,
+          insurance.rule[0].target
+        );
+      }
+      expect(resultExecute).toBe(true);
+      if (resultExecute) {
+        if (insurance.rule) {
+          let insuranceCopy: IInsurance = { ...insurance };
+          insuranceCopy.price = operations[insurance.rule[0].effect.operation](
+            insuranceCopy.price,
+            insurance.rule[0].effect.operator
+          );
+          insurance = new Insurance(insuranceCopy);
+        }
+      }
+      expect(insurance.price).toBe(101);
+    });
+    it("Should execute the operation after the test of rule (decrement operator)", () => {
       const effect = new Effect({
         field: "price",
         operation: "-",
@@ -141,9 +181,89 @@ describe("Insurance Data-Access-Object test", () => {
       }
       expect(insurance.price).toBe(99);
     });
+    it("Should execute the operation after the test of rule (multiply operator)", () => {
+      const effect = new Effect({
+        field: "price",
+        operation: "*",
+        operator: 2
+      });
+      const rule = new Rule({
+        field: "sellIn",
+        operation: "daily",
+        target: 10,
+        effect
+      });
+      const newInsurance = {
+        name: "test",
+        price: 100,
+        sellIn: 10,
+        rule: [rule]
+      };
+      let insurance: Insurance = new Insurance(newInsurance);
+      let resultExecute: boolean = false;
+      if (insurance.rule) {
+        resultExecute = executeRule(
+          insurance.rule[0],
+          insurance.sellIn,
+          insurance.rule[0].target
+        );
+      }
+      expect(resultExecute).toBe(true);
+      if (resultExecute) {
+        if (insurance.rule) {
+          let insuranceCopy: IInsurance = { ...insurance };
+          insuranceCopy.price = operations[insurance.rule[0].effect.operation](
+            insuranceCopy.price,
+            insurance.rule[0].effect.operator
+          );
+          insurance = new Insurance(insuranceCopy);
+        }
+      }
+      expect(insurance.price).toBe(200);
+    });
+    it("Should execute the operation after the test of rule (divider operator)", () => {
+      const effect = new Effect({
+        field: "price",
+        operation: "/",
+        operator: 2
+      });
+      const rule = new Rule({
+        field: "sellIn",
+        operation: "daily",
+        target: 10,
+        effect
+      });
+      const newInsurance = {
+        name: "test",
+        price: 100,
+        sellIn: 10,
+        rule: [rule]
+      };
+      let insurance: Insurance = new Insurance(newInsurance);
+      let resultExecute: boolean = false;
+      if (insurance.rule) {
+        resultExecute = executeRule(
+          insurance.rule[0],
+          insurance.sellIn,
+          insurance.rule[0].target
+        );
+      }
+      expect(resultExecute).toBe(true);
+      if (resultExecute) {
+        if (insurance.rule) {
+          let insuranceCopy: IInsurance = { ...insurance };
+          insuranceCopy.price = operations[insurance.rule[0].effect.operation](
+            insuranceCopy.price,
+            insurance.rule[0].effect.operator
+          );
+          insurance = new Insurance(insuranceCopy);
+        }
+      }
+      expect(insurance.price).toBe(50);
+    });
   });
   describe("Simulate the effects of rules by two days", () => {
-    it("Should return a list of the insurance and the changes by days", () => {
+    it("Should return a list of the insurance and the changes by days with decrement operator", () => {
       const insuranceDao = new InsuranceDao();
       insuranceDao.add(
         new Insurance({
@@ -160,7 +280,7 @@ describe("Insurance Data-Access-Object test", () => {
           ]
         })
       );
-      insuranceDao.add(
+      const insuranceList = insuranceDao.add(
         new Insurance({
           name: "Seguro 2",
           price: 10,
@@ -176,6 +296,8 @@ describe("Insurance Data-Access-Object test", () => {
         })
       );
       const result = insuranceDao.simulate(2);
+      expect(insuranceList[0].rule).toBeDefined();
+      expect(insuranceList[1].rule).toBeDefined();
       expect(result.length).toEqual(2);
       expect(result).toEqual([
         [
@@ -232,6 +354,38 @@ describe("Insurance Data-Access-Object test", () => {
                 effect: { field: "price", operation: "-", operator: 1 }
               }
             ]
+          }
+        ]
+      ]);
+    });
+    it("Should return a list of the insurance with no changes", () => {
+      const insuranceDao = new InsuranceDao();
+      const insuranceList = insuranceDao.add(
+        new Insurance({
+          name: "Seguro 2",
+          price: 10,
+          sellIn: 10,
+          rule: []
+        })
+      );
+      expect(insuranceList[0].rule).toEqual([]);
+      const result = insuranceDao.simulate(2);
+      expect(result.length).toEqual(2);
+      expect(result).toEqual([
+        [
+          {
+            name: "Seguro 2",
+            price: 10,
+            sellIn: 10,
+            rule: []
+          }
+        ],
+        [
+          {
+            name: "Seguro 2",
+            price: 10,
+            sellIn: 10,
+            rule: []
           }
         ]
       ]);

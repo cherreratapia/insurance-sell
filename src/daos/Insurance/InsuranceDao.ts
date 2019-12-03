@@ -59,7 +59,11 @@ export class InsuranceDao implements IInsuranceDao {
           });
         }
       });
-      copyInsurance = [...result[i]];
+      if (result[i]) {
+        copyInsurance = [...result[i]];
+      } else {
+        result.push([...copyInsurance]);
+      }
     }
     return result;
   }
