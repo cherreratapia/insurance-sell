@@ -179,90 +179,60 @@ describe("Insurance Data-Access-Object test", () => {
       expect(result.length).toEqual(2);
       expect(result).toEqual([
         [
-          [
-            {
-              name: "test",
-              price: 100,
-              sellIn: 10,
-              rule: [
-                {
-                  field: "sellIn",
-                  operation: "daily",
-                  target: 10,
-                  effect: { field: "price", operation: "-", operator: 1 }
-                }
-              ]
-            },
-            {
-              name: "Seguro 2",
-              price: 10,
-              sellIn: 10,
-              rule: [
-                {
-                  field: "sellIn",
-                  operation: "daily",
-                  target: 10,
-                  effect: { field: "price", operation: "-", operator: 1 }
-                }
-              ]
-            }
-          ],
-          [
-            {
-              name: "test",
-              price: 99,
-              sellIn: 10,
-              rule: [
-                {
-                  field: "sellIn",
-                  operation: "daily",
-                  target: 10,
-                  effect: { field: "price", operation: "-", operator: 1 }
-                }
-              ]
-            },
-            {
-              name: "Seguro 2",
-              price: 9,
-              sellIn: 10,
-              rule: [
-                {
-                  field: "sellIn",
-                  operation: "daily",
-                  target: 10,
-                  effect: { field: "price", operation: "-", operator: 1 }
-                }
-              ]
-            }
-          ],
-          [
-            {
-              name: "test",
-              price: 98,
-              sellIn: 10,
-              rule: [
-                {
-                  field: "sellIn",
-                  operation: "daily",
-                  target: 10,
-                  effect: { field: "price", operation: "-", operator: 1 }
-                }
-              ]
-            },
-            {
-              name: "Seguro 2",
-              price: 8,
-              sellIn: 10,
-              rule: [
-                {
-                  field: "sellIn",
-                  operation: "daily",
-                  target: 10,
-                  effect: { field: "price", operation: "-", operator: 1 }
-                }
-              ]
-            }
-          ]
+          {
+            name: "test",
+            price: 99,
+            sellIn: 10,
+            rule: [
+              {
+                field: "sellIn",
+                operation: "daily",
+                target: 10,
+                effect: { field: "price", operation: "-", operator: 1 }
+              }
+            ]
+          },
+          {
+            name: "Seguro 2",
+            price: 9,
+            sellIn: 10,
+            rule: [
+              {
+                field: "sellIn",
+                operation: "daily",
+                target: 10,
+                effect: { field: "price", operation: "-", operator: 1 }
+              }
+            ]
+          }
+        ],
+        [
+          {
+            name: "test",
+            price: 98,
+            sellIn: 10,
+            rule: [
+              {
+                field: "sellIn",
+                operation: "daily",
+                target: 10,
+                effect: { field: "price", operation: "-", operator: 1 }
+              }
+            ]
+          },
+          {
+            name: "Seguro 2",
+            price: 8,
+            sellIn: 10,
+            rule: [
+              {
+                field: "sellIn",
+                operation: "daily",
+                target: 10,
+                effect: { field: "price", operation: "-", operator: 1 }
+              }
+            ]
+          }
         ]
       ]);
     });
