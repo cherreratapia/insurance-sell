@@ -6,7 +6,6 @@ export interface IInsurance {
   sellIn: number;
   price: number;
   rule?: Rule[];
-  effect?: Effect[];
 }
 
 export class Insurance implements IInsurance {
@@ -14,19 +13,14 @@ export class Insurance implements IInsurance {
   sellIn: number;
   price: number;
   rule?: Rule[];
-  effect?: Effect[];
 
   constructor(_insurance: Insurance) {
     this.name = _insurance.name;
     this.sellIn = _insurance.sellIn;
     this.price = _insurance.price;
     this.rule = [];
-    this.effect = [];
     if (_insurance.rule) {
       this.rule = _insurance.rule;
-    }
-    if (_insurance.effect) {
-      this.effect = _insurance.effect;
     }
   }
 }

@@ -24,29 +24,28 @@ describe("Insurance Data-Access-Object test", () => {
           name: "test",
           price: 100,
           sellIn: 10,
-          rule: [],
-          effect: []
+          rule: []
         }
       ]);
     });
     it("Should return an array with the item added, it should includes one rule and one effect", () => {
       const insuranceDao = new InsuranceDao();
-      const rule = new Rule({
-        field: "sellIn",
-        operation: "lessThan",
-        target: 10
-      });
       const effect = new Effect({
         field: "price",
         operation: "-",
         operator: 1
       });
+      const rule = new Rule({
+        field: "sellIn",
+        operation: "daily",
+        target: 10,
+        effect
+      });
       const newInsurance = {
         name: "test",
         price: 100,
         sellIn: 10,
-        rule: [rule],
-        effect: [effect]
+        rule: [rule]
       };
       const insurance: Insurance = new Insurance(newInsurance);
       const result = insuranceDao.add(insurance);
@@ -58,15 +57,13 @@ describe("Insurance Data-Access-Object test", () => {
           rule: [
             {
               field: "sellIn",
-              operation: "lessThan",
-              target: 10
-            }
-          ],
-          effect: [
-            {
-              field: "price",
-              operation: "-",
-              operator: 1
+              operation: "daily",
+              target: 10,
+              effect: {
+                field: "price",
+                operation: "-",
+                operator: 1
+              }
             }
           ]
         }
