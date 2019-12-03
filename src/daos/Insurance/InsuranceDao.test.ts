@@ -1,4 +1,4 @@
-import { Insurance } from "../../entities/Insurance";
+import { Insurance, Rule, Effect } from "../../entities";
 import { InsuranceDao } from "./InsuranceDao";
 
 describe("Insurance Data-Access-Object test", () => {
@@ -26,6 +26,49 @@ describe("Insurance Data-Access-Object test", () => {
           sellIn: 10,
           rule: [],
           effect: []
+        }
+      ]);
+    });
+    it("Should return an array with the item added, it should includes one rule and one effect", () => {
+      const insuranceDao = new InsuranceDao();
+      const rule = new Rule({
+        field: "sellIn",
+        operation: "lessThan",
+        target: 10
+      });
+      const effect = new Effect({
+        field: "price",
+        operation: "-",
+        operator: 1
+      });
+      const newInsurance = {
+        name: "test",
+        price: 100,
+        sellIn: 10,
+        rule: [rule],
+        effect: [effect]
+      };
+      const insurance: Insurance = new Insurance(newInsurance);
+      const result = insuranceDao.add(insurance);
+      expect(result).toEqual([
+        {
+          name: "test",
+          price: 100,
+          sellIn: 10,
+          rule: [
+            {
+              field: "sellIn",
+              operation: "lessThan",
+              target: 10
+            }
+          ],
+          effect: [
+            {
+              field: "price",
+              operation: "-",
+              operator: 1
+            }
+          ]
         }
       ]);
     });
